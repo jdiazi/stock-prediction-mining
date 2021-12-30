@@ -5,8 +5,17 @@ from fbprophet import Prophet
 from fbprophet.plot import plot_plotly
 from plotly import graph_objs as go
 
-START = '2015-01-01'
-TODAY = date.today().strftime('%Y-%m-%d')
+st.set_page_config(
+     page_title="Stock Prediction App",
+     page_icon=":pick:",
+     layout="wide",
+     initial_sidebar_state="expanded",
+     menu_items={
+         'Get Help': 'https://www.linkedin.com/in/jdiazi/',
+         'Report a bug': "https://www.linkedin.com/in/jdiazi/",
+         'About': "In process to update"
+     }
+ )
 
 st.title('Stock Prediction App')
 
@@ -22,14 +31,17 @@ stocks_dict = {
     }
 
 stocks_keys = list(stocks_dict.keys())
-
 selected_stock_key = st.sidebar.selectbox('Select dataset for prediction', stocks_keys)
-
 selected_stock = stocks_dict[selected_stock_key]
+
+# START = date(2019, 7, 6)
+START = st.sidebar.date_input("Select the initial date", date(2019, 7, 6))
+# END = date.today().strftime('%Y-%m-%d')
+END = st.sidebar.date_input("Select the final date", date.today())
 
 @st.cache
 def load_data(ticker):
-    data = yf.download(ticker, START, TODAY)
+    data = yf.download(ticker, START, END)
     data.reset_index(inplace=True)
     return data
 
